@@ -154,7 +154,7 @@ class LigneFacture:
 
 ---
 
-## 🔍 Explications pour Enfants
+## 🔍 Explications 
 
 ### Imagine un magasin... 🏪
 
