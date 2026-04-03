@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Modifier la Quantité{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1>✏️ Modifier la Quantité</h1>
+        <p class="text-muted">Facture #{{ facture.id }} - {{ ligne.produit.nom }}</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="card">
+            <div class="card-body">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    <!-- Champ : Produit (lecture seule) -->
+                    <div class="mb-3">
+                        <label class="form-label">Produit</label>
+                        <div class="form-control-plaintext">
+                            <strong>{{ ligne.produit.nom }}</strong>
+                            <span class="badge bg-info">{{ ligne.produit.prix }}€</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Champ : Quantité -->
+                    <div class="mb-3">
+                        <label for="{{ form.quantite.id_for_label }}" class="form-label">{{ form.quantite.label }}</label>
+                        {{ form.quantite }}
+                        {% if form.quantite.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.quantite.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Boutons -->
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">✅ Enregistrer</button>
+                        <a href="{% url 'detail_facture' facture.id %}" class="btn btn-secondary">❌ Annuler</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

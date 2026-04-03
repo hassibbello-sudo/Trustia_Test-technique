@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Supprimer un Produit de la Facture{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="card border-danger">
+            <div class="card-body">
+                <h2 class="card-title text-danger">⚠️ Confirmer la suppression</h2>
+                <p class="card-text">
+                    Êtes-vous sûr de vouloir supprimer <strong>{{ ligne.produit.nom }}</strong> 
+                    (x{{ ligne.quantite }}) de la facture #{{ facture.id }} ?
+                </p>
+                <p class="text-muted">Cette action est irréversible.</p>
+                
+                <div class="d-grid gap-2">
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-lg">🗑️ Oui, supprimer</button>
+                    </form>
+                    <a href="{% url 'detail_facture' facture.id %}" class="btn btn-secondary">❌ Annuler</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

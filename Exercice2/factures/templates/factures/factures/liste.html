@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Liste des Factures{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1>📄 Gestion des Factures</h1>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{% url 'creer_facture' %}" class="btn btn-success btn-lg">
+            ➕ Créer une facture
+        </a>
+    </div>
+</div>
+
+<!-- TABLEAU DES FACTURES -->
+<div class="card">
+    <div class="card-body">
+        {% if factures %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>Nombre de produits</th>
+                            <th>Total</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for facture in factures %}
+                        <tr>
+                            <td><strong>#{{ facture.id }}</strong></td>
+                            <td>{{ facture.date_creation|date:"d/m/Y H:i" }}</td>
+                            <td>
+                                <span class="badge bg-info">
+                                    {{ facture.total_produits }} produit{{ facture.total_produits|pluralize }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge bg-success badge-total">{{ facture.total_paye }}€</span>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a href="{% url 'detail_facture' facture.id %}" class="btn btn-primary">👁️</a>
+                                    <a href="{% url 'supprimer_facture' facture.id %}" class="btn btn-danger">🗑️</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info text-center">
+                <p>Aucune facture créée. <a href="{% url 'creer_facture' %}">Créer la première facture</a></p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- PAGINATION -->
+{% if paginator.num_pages > 1 %}
+<nav aria-label="Navigation des pages">
+    <ul class="pagination justify-content-center">
+        {% if factures.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">⏮️ Première</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ factures.previous_page_number }}">⬅️ Précédente</a>
+            </li>
+        {% endif %}
+        
+        {% for num in paginator.page_range %}
+            {% if factures.number == num %}
+                <li class="page-item active">
+                    <span class="page-link">{{ num }}</span>
+                </li>
+            {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+        
+        {% if factures.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ factures.next_page_number }}">Suivante ➡️</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ paginator.num_pages }}">Dernière ⏭️</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+<p class="text-center text-muted">Page {{ factures.number }} sur {{ paginator.num_pages }}</p>
+{% endif %}
+
+{% endblock %}

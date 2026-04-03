@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Créer une Facture{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1>➕ Créer une Facture</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="card">
+            <div class="card-body">
+                <p class="text-muted">Une nouvelle facture vide va être créée.</p>
+                <p>Vous pourrez ajouter des produits ensuite.</p>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">✅ Créer la Facture</button>
+                        <a href="{% url 'liste_factures' %}" class="btn btn-secondary">❌ Annuler</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

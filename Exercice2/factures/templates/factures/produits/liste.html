@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Liste des Produits{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1>📦 Gestion des Produits</h1>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{% url 'creer_produit' %}" class="btn btn-success btn-lg">
+            ➕ Ajouter un produit
+        </a>
+    </div>
+</div>
+
+<!-- TABLEAU DES PRODUITS -->
+<div class="card">
+    <div class="card-body">
+        {% if produits %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nom</th>
+                            <th>Prix</th>
+                            <th>Date Péremption</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for produit in produits %}
+                        <tr>
+                            <td><strong>#{{ produit.id }}</strong></td>
+                            <td>{{ produit.nom }}</td>
+                            <td><span class="badge bg-info">{{ produit.prix }}€</span></td>
+                            <td>
+                                {% if produit.date_peremption %}
+                                    <span class="badge bg-warning">{{ produit.date_peremption }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a href="{% url 'modifier_produit' produit.id %}" class="btn btn-primary">✏️</a>
+                                    <a href="{% url 'supprimer_produit' produit.id %}" class="btn btn-danger">🗑️</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info text-center">
+                <p>Aucun produit enregistré. <a href="{% url 'creer_produit' %}">Créer le premier produit</a></p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- PAGINATION -->
+{% if paginator.num_pages > 1 %}
+<nav aria-label="Navigation des pages">
+    <ul class="pagination justify-content-center">
+        {% if produits.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">⏮️ Première</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ produits.previous_page_number }}">⬅️ Précédente</a>
+            </li>
+        {% endif %}
+        
+        {% for num in paginator.page_range %}
+            {% if produits.number == num %}
+                <li class="page-item active">
+                    <span class="page-link">{{ num }}</span>
+                </li>
+            {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+        
+        {% if produits.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ produits.next_page_number }}">Suivante ➡️</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ paginator.num_pages }}">Dernière ⏭️</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+<p class="text-center text-muted">Page {{ produits.number }} sur {{ paginator.num_pages }}</p>
+{% endif %}
+
+{% endblock %}
